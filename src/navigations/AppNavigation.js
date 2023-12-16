@@ -1,69 +1,118 @@
-import React from 'react'
-import {createStackNavigator} from '@react-navigation/stack'
-import {NavigationContainer} from '@react-navigation/native'
-import {createDrawerNavigator} from '@react-navigation/drawer' 
-import HomeScreen from '../screens/Home/HomeScreen';
-import CategoriesScreen from '../screens/Categories/CategoriesScreen';
-import RecipeScreen from '../screens/Recipe/RecipeScreen';
-import RecipesListScreen from '../screens/RecipesList/RecipesListScreen';
-import DrawerContainer from '../screens/DrawerContainer/DrawerContainer';
-import IngredientScreen from '../screens/Ingredient/IngredientScreen';
-import SearchScreen from '../screens/Search/SearchScreen';
-import IngredientsDetailsScreen from '../screens/IngredientsDetails/IngredientsDetailsScreen';
+import React from "react";
+import { createStackNavigator } from "@react-navigation/stack";
+import { NavigationContainer } from "@react-navigation/native";
+import HomeScreen from "../screens/Home/HomeScreen";
+import CategoriesScreen from "../screens/Categories/CategoriesScreen";
+import CartScreen from "../screens/Search/CartScreen";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import LandingPage from "../screens/LandingPage";
+import ItemScreen from "../screens/Item/ItemScreen";
 
- const Stack = createStackNavigator();
+const Tab = createBottomTabNavigator();
 
-function MainNavigator() {
-  return(
-    <Stack.Navigator
+function BottomTabNavigator() {
+  return (
+    <Tab.Navigator
       screenOptions={{
+        tabBarActiveTintColor: "tomato",
+        tabBarInactiveTintColor: "gray",
+      }}
+    >
+      <Tab.Screen
+        name="Home"
+        component={HomeScreen}
+        options={{
+          //tabBarLabel: "Cart",
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="home" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Menu"
+        component={CategoriesScreen}
+        options={{
+          //tabBarLabel: "Cart",
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons
+              name="format-list-bulleted"
+              color={color}
+              size={size}
+            />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Cart"
+        component={CartScreen}
+        options={{
+          //tabBarLabel: "Cart",
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="cart" color={color} size={size} />
+          ),
+          headerTitle: "Your Cart",
+          headerShadowVisible: false,
+          headerStyle: {
+            backgroundColor: "#000000",
+          },
           headerTitleStyle: {
-            fontWeight: 'bold',
-            textAlign: 'center',
-            alignSelf: 'center',
-            flex: 1,
-          }
-      }}
-    >
-      <Stack.Screen name='Home' component={HomeScreen} />
-      <Stack.Screen name='Categories' component={CategoriesScreen}/>
-      <Stack.Screen name='Recipe' component={RecipeScreen}/>
-      <Stack.Screen name='RecipesList' component={RecipesListScreen} />
-      <Stack.Screen name='Ingredient' component={IngredientScreen} />
-      <Stack.Screen name='Search' component={SearchScreen} />
-      <Stack.Screen name='IngredientsDetails' component={IngredientsDetailsScreen} />
-    </Stack.Navigator>
-  )
-} 
+            fontSize: 22,
+            color: "#FFFFFF",
+          },
+        }}
+      />
+    </Tab.Navigator>
+  );
+}
 
+const Stack = createStackNavigator();
 
-
- const Drawer = createDrawerNavigator();
-
-function DrawerStack() {
-  return(
-    <Drawer.Navigator
-      drawerPosition='left'
-      initialRouteName='Main'
-      drawerStyle={{
-        width: 250
-      }}
-      screenOptions={{headerShown: false}}
-      drawerContent={({navigation})=> <DrawerContainer navigation={navigation}/>}
-    >
-      <Drawer.Screen name='Main' component={MainNavigator} />
-    </Drawer.Navigator>
-  )
-} 
-
-
- export default function AppContainer() {
-  return(
+function AppContainer() {
+  return (
     <NavigationContainer>
-      <DrawerStack/>
+      <Stack.Navigator initialRouteName="LandingPage">
+        <Stack.Screen
+          name="LandingPage"
+          component={LandingPage}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="MainApp"
+          component={BottomTabNavigator}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="ItemScreen"
+          component={ItemScreen}
+          options={{ headerTitle: "Modify your Selection" }}
+        />
+        <Stack.Screen
+          name="CartScreen"
+          component={CartScreen}
+          options={{
+            //tabBarLabel: "Cart",
+            tabBarIcon: ({ color, size }) => (
+              <MaterialCommunityIcons name="cart" color={color} size={size} />
+            ),
+            headerTitle: "Your Cart",
+            headerShadowVisible: false,
+            headerStyle: {
+              backgroundColor: "#000000",
+            },
+            headerBackTitleVisible: false,
+            headerTintColor: "#FFFFFF",
+            headerTitleStyle: {
+              fontSize: 22,
+              color: "#FFFFFF",
+            },
+          }}
+        />
+      </Stack.Navigator>
     </NavigationContainer>
-  )
-} 
- 
+  );
+}
+
+export default AppContainer;
 
 console.disableYellowBox = true;
